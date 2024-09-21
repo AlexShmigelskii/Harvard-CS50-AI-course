@@ -1,13 +1,13 @@
-from tictactoe import terminal
+from tictactoe import terminal, actions, result, winner, minimax
 
 X = "X"
 O = "O"
 EMPTY = None
 
 board = [
-    [None, O, X],
-    [O, X, O],
-    [X, X, O]
+    [None, None, None],
+    [X, X, O],
+    [None, None, None]
 ]
 
 print(terminal(board=board))
