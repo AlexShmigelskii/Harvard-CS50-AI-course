@@ -1,5 +1,6 @@
 import csv
 import sys
+import time
 
 from util import Node, StackFrontier, QueueFrontier
 
@@ -69,7 +70,9 @@ def main():
     if target is None:
         sys.exit("Person not found.")
 
+    start_time = time.time()
     path = shortest_path(source, target)
+    print("--- %s seconds ---" % (time.time() - start_time))
 
     if path is None:
         print("Not connected.")
@@ -108,29 +111,43 @@ def shortest_path(source, target):
         
         # If frontier is empty --> no solution
         if frontier.empty():
+            print(f"Было проверено {num_explored} людей")
             raise Exception("No solution found!")
         
         node = frontier.remove()
         num_explored += 1
 
-        if node.state == target:
-            path = []
+        # if node.state == target:
+        #     path = []
 
-            # Follow parent node to find the solution
-            while node.parent is not None:
-                path.append((node.action, node.state))
-                node = node.parent
+        #     # Follow parent node to find the solution
+        #     while node.parent is not None:
+        #         path.append((node.action, node.state))
+        #         node = node.parent
             
-            print(f"Было проверено {num_explored} людей")
-            path.reverse()
-            return path
+        #     print(f"Было проверено {num_explored} людей")
+        #     path.reverse()
+        #     return path
 
-        # Mark node as explored
-        explored.add(node)
+        # Mark state of the node as explored
+        explored.add(node.state)
 
         # Add neighbours to the frontier
         for action, state in neighbors_for_person(node.state):
             if not frontier.contains_state(state) and state not in explored:
+
+                if state == target:
+                    path = [(action, state)]
+
+                    # Follow parent node to find the solution
+                    while node.parent is not None:
+                        path.append((node.action, node.state))
+                        node = node.parent
+                    
+                    print(f"Было проверено {num_explored} людей")
+                    path.reverse()
+                    return path
+
                 child = Node(state=state, parent=node, action=action)
                 frontier.add(child)
 
