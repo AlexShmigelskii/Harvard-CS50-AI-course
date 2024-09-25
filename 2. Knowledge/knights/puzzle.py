@@ -10,33 +10,41 @@ CKnight = Symbol("C is a Knight")
 CKnave = Symbol("C is a Knave")
 
 
+basic_knowledge = And(
+    Or(AKnight, AKnave),
+    Not(And(AKnight, AKnave)),
+    Or(BKnight, BKnave),
+    Not(And(BKnight, BKnave)),
+    Or(CKnight, CKnave),
+    Not(And(CKnight, CKnave))
+)
 
 # Puzzle 0
 # A says "I am both a knight and a knave."
 knowledge0 = And(
-    Biconditional(Not(AKnight), AKnave),
-    Biconditional(Not(AKnave), AKnight),
-    Biconditional(And(AKnight, AKnave), AKnight),
+    basic_knowledge,
+    Implication(AKnight, And(AKnight, AKnave)),
+    # Implication(AKnave, Not(And(AKnight, AKnave))),
 )
 
 # Puzzle 1
 # A says "We are both knaves."
 # B says nothing.
 knowledge1 = And(
-    Biconditional(And(AKnave, BKnave), AKnight),
-    Biconditional(Not(And(AKnave, BKnave)), AKnave),
-    Biconditional(AKnave, BKnight), # If A is a Knave <--> B is a Knight
-    Biconditional(AKnight, BKnave) # If A is a Knight <--> B is a Knave
+    basic_knowledge,
+    Implication(AKnight, And(AKnave, BKnave)),
+    Implication(AKnave, Not(And(AKnave, BKnave)))
 )
 
 # Puzzle 2
 # A says "We are the same kind."
 # B says "We are of different kinds."
 knowledge2 = And(
-    Biconditional(AKnave, BKnight), # If A is a Knave <--> B is a Knight
-    Biconditional(AKnight, BKnave), # If A is a Knight <--> B is a Knave
-    Biconditional(Or(And(AKnave, BKnave), And(AKnight, BKnight)), AKnight), # A says "We are the same kind."
-    Biconditional(Or(Not(And(AKnave, BKnave)), Not(And(AKnight, BKnight))), BKnight), # B says "We are of different kinds."
+    basic_knowledge,
+    Implication(AKnight, Or(And(AKnight, BKnight), And(AKnave, BKnave))),
+    Implication(AKnave, Not(Or(And(AKnight, BKnight), And(AKnave, BKnave)))),
+    Implication(BKnight, Or(And(AKnight, BKnave), And(AKnave, BKnight))),
+    Implication(BKnave, Not(Or(And(AKnight, BKnave), And(AKnave, BKnight))))
 )
 
 # Puzzle 3
@@ -45,7 +53,15 @@ knowledge2 = And(
 # B says "C is a knave."
 # C says "A is a knight."
 knowledge3 = And(
-    # TODO
+    basic_knowledge,
+    Implication(AKnight, Or(AKnight, AKnave)),
+    Implication(AKnave, Not(Or(AKnight, AKnave))),
+    Implication(BKnight, Implication(AKnight, BKnave)),
+    Implication(BKnave, Implication(AKnave, BKnight)),
+    Implication(BKnight, CKnave),
+    Implication(BKnave, CKnight),
+    Implication(CKnight, AKnight),
+    Implication(CKnave, AKnave)
 )
 
 
