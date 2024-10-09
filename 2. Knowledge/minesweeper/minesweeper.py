@@ -182,7 +182,15 @@ class MinesweeperAI():
             5) add any new sentences to the AI's knowledge base
                if they can be inferred from existing knowledge
         """
-        raise NotImplementedError
+
+        self.moves_made.add(cell) # mark the cell as a move that has been made
+        self.safes.add(cell) # mark the cell as safe
+
+        self.knowledge.append(Sentence(check_neighbours(cell, self.height, self.width), count)) # add a new sentence to the AI's knowledge base
+
+
+
+
 
     def make_safe_move(self):
         """
@@ -203,3 +211,41 @@ class MinesweeperAI():
             2) are not known to be mines
         """
         raise NotImplementedError
+
+
+def check_neighbours(cell, height, width):
+    
+    i, j = cell
+    new_cells = set()
+
+    if  0 <= (i - 1) <= height and 0 <= (j - 1) <= width: # upper-left corner cell
+        new_cells.add((i - 1, j - 1))
+
+    if 0 <= (i - 1) <= height and 0 <= j<= width: # upper cell
+        new_cells.add((i - 1, j))
+
+    if 0 <= (i - 1) <= height and 0 <= (j + 1) <= width: # upper-right corner cell
+        new_cells.add((i - 1, j + 1))
+
+    if 0 <= i <= height and 0 <= (j + 1) <= width: #right cell
+        new_cells.add((i, j + 1))
+
+    if 0 <= (i + 1) <= height and 0 <= (j + 1) <= width: # lower-right cell
+        new_cells.add((i + 1, j + 1))
+
+    if 0 <= (i + 1) <= height and 0 <= j <= width: # lower cell
+        new_cells.add((i + 1, j))
+
+    if 0 <= (i + 1) <= height and 0 <= (j - 1) <= width: # lower-left cell
+        new_cells.add((i + 1, j - 1))
+    
+    if 0 <= i <= height and 0 <= (j - 1) <= width: # left cell
+        new_cells.add((i, j - 1))
+
+    return new_cells
+
+
+def check_safe_cells(sentences):
+    
+    for sentence in sentences:
+        pass
